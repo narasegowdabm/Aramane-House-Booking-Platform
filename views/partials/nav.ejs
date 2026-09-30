@@ -1,0 +1,34 @@
+<%
+  const linkClass = (page) =>
+    (currentPage === page ? 'bg-white/20 font-semibold' : 'hover:bg-white/10') +
+    ' px-3 py-2 rounded-lg text-sm whitespace-nowrap transition duration-200';
+%>
+<header class="bg-red-500 text-white shadow-md sticky top-0 z-50">
+  <nav class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
+    <a href="/" class="text-2xl font-extrabold tracking-tight lowercase">airbnb</a>
+
+    <% if (isLoggedIn) { %>
+      <ul class="flex items-center gap-1 overflow-x-auto order-last w-full md:order-none md:w-auto">
+        <li><a href="/" class="<%= linkClass('index') %>">Home</a></li>
+        <li><a href="/homes" class="<%= linkClass('Home') %>">Homes List</a></li>
+        <li><a href="/favourites" class="<%= linkClass('favourites') %>">Favourites</a></li>
+        <li><a href="/bookings" class="<%= linkClass('bookings') %>">Bookings</a></li>
+        <li><a href="/host/host-home-list" class="<%= linkClass('host-homes') %>">Host Homes</a></li>
+        <li><a href="/host/add-home" class="<%= linkClass('addHome') %>">Add Home</a></li>
+      </ul>
+    <% } %>
+
+    <div class="flex items-center gap-2">
+      <% if (isLoggedIn) { %>
+        <form action="/logout" method="POST">
+          <button type="submit"
+            class="px-4 py-2 rounded-lg text-sm font-semibold border border-white/60 hover:bg-white hover:text-red-500 transition duration-200">Logout</button>
+        </form>
+      <% } else { %>
+        <a href="/login" class="<%= linkClass('login') %>">Login</a>
+        <a href="/signUp"
+          class="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-red-500 hover:bg-red-50 shadow-sm transition duration-200">Sign Up</a>
+      <% } %>
+    </div>
+  </nav>
+</header>

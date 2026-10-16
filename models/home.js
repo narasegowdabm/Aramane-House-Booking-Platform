@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const favourite = require('./favourite');
 
 const homeSchema = mongoose.Schema({
   houseName: {

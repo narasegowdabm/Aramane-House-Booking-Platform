@@ -1,34 +1,62 @@
 <%
-  const linkClass = (page) =>
-    (currentPage === page ? 'bg-white/20 font-semibold' : 'hover:bg-white/10') +
-    ' px-3 py-2 rounded-lg text-sm whitespace-nowrap transition duration-200';
+  const userType = (typeof user !== 'undefined' && user) ? user.userType : undefined;
+  const isActive = (page) => currentPage === page;
+  const desktopLinkClass = (page) =>
+    (isActive(page)
+      ? 'bg-white text-rose-600 shadow-sm'
+      : 'text-gray-600 hover:text-gray-900 hover:bg-white/70') +
+    ' px-3.5 py-1.5 rounded-full text-sm font-medium whitespace-nowrap transition duration-200';
 %>
-<header class="bg-red-500 text-white shadow-md sticky top-0 z-50">
-  <nav class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-    <a href="/" class="text-2xl font-extrabold tracking-tight lowercase">airbnb</a>
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/80 shadow-sm">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap items-center justify-between gap-3">
+    <!-- Brand -->
+    <a href="/" class="flex items-center gap-2 group shrink-0">
+      <span class="grid place-items-center w-9 h-9 rounded-xl bg-gradient-to-br from-rose-500 to-pink-500 text-white shadow-md shadow-rose-500/30 group-hover:scale-105 transition duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5">
+          <path d="M11.47 3.84a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.06l-8.69-8.69a2.25 2.25 0 0 0-3.18 0l-8.69 8.69a.75.75 0 0 0 1.06 1.06l8.69-8.69Z" />
+          <path d="m12 5.43 8.16 8.16c.03.03.06.06.09.08v6.2c0 1.04-.84 1.88-1.88 1.88H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.63a1.88 1.88 0 0 1-1.88-1.88v-6.2l.09-.08L12 5.43Z" />
+        </svg>
+      </span>
+      <span class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-rose-500 to-pink-500 bg-clip-text text-transparent lowercase">airbnb</span>
+    </a>
 
+    <!-- Links -->
     <% if (isLoggedIn) { %>
-      <ul class="flex items-center gap-1 overflow-x-auto order-last w-full md:order-none md:w-auto">
-        <li><a href="/" class="<%= linkClass('index') %>">Home</a></li>
-        <li><a href="/homes" class="<%= linkClass('Home') %>">Homes List</a></li>
-        <li><a href="/favourites" class="<%= linkClass('favourites') %>">Favourites</a></li>
-        <li><a href="/bookings" class="<%= linkClass('bookings') %>">Bookings</a></li>
-        <li><a href="/host/host-home-list" class="<%= linkClass('host-homes') %>">Host Homes</a></li>
-        <li><a href="/host/add-home" class="<%= linkClass('addHome') %>">Add Home</a></li>
+      <ul class="flex items-center gap-1 p-1 rounded-full bg-gray-100/80 border border-gray-200/60 overflow-x-auto order-last w-full lg:order-none lg:w-auto">
+        <li><a href="/" class="<%= desktopLinkClass('index') %>">Home</a></li>
+
+        <% if (userType === 'guest') { %>
+          <li><a href="/homes" class="<%= desktopLinkClass('Home') %>">Homes</a></li>
+          <li><a href="/favourites" class="<%= desktopLinkClass('favourites') %>">Favourites</a></li>
+          <li><a href="/bookings" class="<%= desktopLinkClass('bookings') %>">Bookings</a></li>
+        <% } %>
+
+        <% if (userType === 'host') { %>
+          <li><a href="/host/host-home-list" class="<%= desktopLinkClass('host-homes') %>">Host Homes</a></li>
+          <li><a href="/host/add-home" class="<%= desktopLinkClass('addHome') %>">Add Home</a></li>
+        <% } %>
       </ul>
     <% } %>
 
+    <!-- Actions -->
     <div class="flex items-center gap-2">
       <% if (isLoggedIn) { %>
         <form action="/logout" method="POST">
           <button type="submit"
-            class="px-4 py-2 rounded-lg text-sm font-semibold border border-white/60 hover:bg-white hover:text-red-500 transition duration-200">Logout</button>
+            class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold text-gray-700 border border-gray-300 hover:border-rose-500 hover:text-rose-600 hover:bg-rose-50 transition duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15m3 0 3-3m0 0-3-3m3 3H9" />
+            </svg>
+            Logout
+          </button>
         </form>
       <% } else { %>
-        <a href="/login" class="<%= linkClass('login') %>">Login</a>
+        <a href="/login"
+          class="px-4 py-2 rounded-full text-sm font-semibold transition duration-200 <%= isActive('login') ? 'text-rose-600 bg-rose-50' : 'text-gray-700 hover:bg-gray-100' %>">Log in</a>
         <a href="/signUp"
-          class="px-4 py-2 rounded-lg text-sm font-semibold bg-white text-red-500 hover:bg-red-50 shadow-sm transition duration-200">Sign Up</a>
+          class="px-4 py-2 rounded-full text-sm font-semibold text-white bg-gradient-to-r from-rose-500 to-pink-500 shadow-md shadow-rose-500/30 hover:shadow-lg hover:shadow-rose-500/40 hover:-translate-y-0.5 transition duration-200">Sign up</a>
       <% } %>
     </div>
   </nav>
+
 </header>

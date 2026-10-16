@@ -5,19 +5,24 @@
     <main class="container mx-auto mt-8 p-8 bg-white rounded-lg shadow-md">
       <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Login with your info</h1>
       <form action="/login" method="POST" class="max-w-md mx-auto">
+        <%- include('../partials/errors') %>
         <input
-          type="text"
-          name="username"
-          placeholder="Email/Username"
+          type="email"
+          name="email"
+          placeholder="Enter Your Email"
+          value="<%=oldInput.email ? oldInput.email : '' %>"
           class="w-full px-4 py-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           required />
         <input
           type="password"
-          name="password"
+          name="Password"
           placeholder="Enter Your Password"
           class="w-full px-4 py-2 mb-4 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-500"
           required/>
         <input type="submit" value="Sign In" class="w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition duration-300" />
+         <label for="login" class="block mt-4 text-sm text-gray-600 text-center">
+        Not Have an account? <a href="/signUp" class="text-red-500 hover:underline">SignUp</a>
+      </label>
       </form>
     </main>
   </body>

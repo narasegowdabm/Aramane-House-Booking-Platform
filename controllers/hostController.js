@@ -5,7 +5,8 @@ exports.getAddHome = (req, res, next) => {
     pageTitle: "Add Home to airbnb",
     currentPage: "addHome",
     editing: false,
-    isLoggedIn: req.isLoggedIn 
+    isLoggedIn: req.isLoggedIn,
+    user:req.session.user
   });
 };
 
@@ -26,6 +27,7 @@ exports.getEditHome = (req, res, next) => {
       currentPage: "host-homes",
       editing: editing,
       isLoggedIn: req.isLoggedIn,
+      user:req.session.user
     });
   });
 };
@@ -37,13 +39,13 @@ exports.getHostHomes = (req, res, next) => {
       pageTitle: "Host Homes List",
       currentPage: "host-homes",
       isLoggedIn: req.isLoggedIn,
+      user:req.session.user
     });
   });
 };
 
 exports.postAddHome = (req, res, next) => {
-  const { houseName, price, location, rating, photoUrl, description } =
-    req.body;
+  const { houseName, price, location, rating, photoUrl, description } = req.body;
   const home = new Home({
     houseName,
     price,
@@ -54,9 +56,10 @@ exports.postAddHome = (req, res, next) => {
   });
   home.save().then(() => {
     console.log("Home Saved successfully");
-  });
-
-  res.redirect("/host/host-home-list");
+    res.redirect("/host/host-home-list");
+  }).catch(err => {
+    console.log("home not saved dur to: ",err.message)
+  })
 };
 
 exports.postEditHome = (req, res, next) => {

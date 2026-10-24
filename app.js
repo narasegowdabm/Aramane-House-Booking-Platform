@@ -2,13 +2,13 @@
 const path = require('path');
 
 // External Module
+require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const multer = require("multer");
 const { default: mongoose } = require('mongoose');
 const MongoDBStore = require('connect-mongodb-session')(session);
-const DB_PATH = "mongodb://localhost:27017/Airbnb-home-db";
-
+const DB_PATH =process.env.MONGODB_ATLAS_URI || process.env.MONGODB_URI;
 //Local Module
 const storeRouter = require("./routes/storeRouter")
 const hostRouter = require("./routes/hostRouter")
@@ -63,7 +63,7 @@ app.use('/uploads', express.static(path.join(rootDir, 'uploads')));
 app.use('/host/uploads', express.static(path.join(rootDir, 'uploads')));
 app.use('/homes/uploads', express.static(path.join(rootDir, 'uploads')));
 app.use(session({
-  secret: "KnowledgeGate AI with Complete Coding",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true,
   store
@@ -87,12 +87,13 @@ app.use("/host", hostRouter);
 
 app.use(errorsController.pageNotFound);
 
-const PORT = 3000;
- app.listen(PORT, () => {
-    console.log(`Server running on port no: {PORT}`);
-});
 mongoose.connect(DB_PATH).then(() => {
   console.log('Connected to Mongo');
 }).catch(err => {
   console.log('Error while connecting to Mongo: ', err);
+});
+
+const PORT = process.env.PORT || 3000;
+ app.listen(PORT,'0.0.0.0', () => {
+    console.log(`Server running on port no: ${PORT}`);
 });
